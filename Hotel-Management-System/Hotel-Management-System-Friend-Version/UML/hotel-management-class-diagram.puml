@@ -1,0 +1,631 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title Hotel Management System - UML Class Diagram
+package "I3.Classes" {
+  class Booking {
+    - customer : UserInfo
+    ~ rooms : ArrayList<Room>
+    - booking_id : int
+    - checkInDateTime : long
+    - checkOutDateTime : long
+    - bookingType : String
+    - person : int
+    --
+    + Booking()
+    + getBooking_id() : int
+    + setBooking_id(booking_id: int) : void
+    + getBookingType() : String
+    + setBookingType(bookingType: String) : void
+    + addRoom(roomNo: String) : void
+    + removeRoom(roomNo: String) : void
+    + getPerson() : int
+    + setPerson(person: int) : void
+    + getRooms() : ArrayList<Room>
+    + getRoomsFare() : int
+    + getCustomer() : UserInfo
+    + setCustomer(customer: UserInfo) : void
+    + setCheckOutDateTime(checkOutDateTime: int) : void
+    + getCheckInDateTime() : long
+    + setCheckInDateTime(checkInDateTime: long) : void
+    + getCheckOutDateTime() : long
+    + setCheckOutDateTime(checkOutDateTime: long) : void
+  }
+  class ExtraOrders {
+    - order_id : int
+    - customer_id : int
+    - dateTime : String
+    - quantity : int
+    - item : Item
+    --
+    + getOrder_id() : int
+    + setOrder_id(order_id: int) : void
+    + getCustomer_id() : int
+    + setCustomer_id(customer_id: int) : void
+    + getDateTime() : String
+    + setDateTime(dateTime: String) : void
+    + getQuantity() : int
+    + setQuantity(quantity: int) : void
+    + getItem() : Item
+    + setItem(item: Item) : void
+    + calculateTotal() : int
+  }
+  class Food {
+    - food_id : int
+    - name : String
+    - price : int
+    --
+    + getFood_id() : int
+    + setFood_id(food_id: int) : void
+    + getName() : String
+    + setName(name: String) : void
+    + getPrice() : int
+    + setPrice(price: int) : void
+  }
+  class Item {
+    - item_id : int
+    - item_name : String
+    - description : String
+    - price : int
+    --
+    + getItem_id() : int
+    + setItem_id(item_id: int) : void
+    + getItem_name() : String
+    + setItem_name(item_name: String) : void
+    + getDescription() : String
+    + setDescription(description: String) : void
+    + getPrice() : int
+    + setPrice(price: int) : void
+  }
+  class Order {
+    ~ orderId : int
+    ~ bookingId : int
+    ~ foodItem : String
+    ~ price : int
+    ~ quantity : int
+    ~ total : int
+    --
+    + Order(b: int, f: String, p: int, q: int, t: int)
+    + getOrderId() : int
+    + setOrderId(orderId: int) : void
+    + getBookingId() : int
+    + setBookingId(bookingId: int) : void
+    + getFoodItem() : String
+    + setFoodItem(foodItem: String) : void
+    + getPrice() : int
+    + setPrice(price: int) : void
+    + getQuantity() : int
+    + setQuantity(quantity: int) : void
+    + getTotal() : int
+    + setTotal(total: int) : void
+  }
+  class Payment {
+    - booking : Booking
+    ~ orders : ArrayList<ExtraOrders>
+    ~ totalRentPrice : int
+    ~ daysStayed : int
+    - payment_date : String
+    - payment_method : String
+    - hasDiscount : boolean
+    - discount : float
+    ~ totalBill : int
+    --
+    + Payment(b: Booking)
+    + getBooking() : Booking
+    + setBooking(booking: Booking) : void
+    + getPayment_date() : String
+    + setPayment_date(payment_date: String) : void
+    + getPayment_method() : String
+    + setPayment_method(payment_method: String) : void
+    + isHasDiscount() : boolean
+    + setHasDiscount(hasDiscount: boolean) : void
+    + getDiscount() : float
+    + setDiscount(discount: float) : void
+    + calculateTotalBill() : int
+  }
+  class Room {
+    - room_id : int
+    - room_no : String
+    - bed_number : int
+    - hasTV : boolean
+    - hasWIFI : boolean
+    - hasGizer : boolean
+    - hasPhone : boolean
+    - room_class : RoomFare
+    --
+    + Room(roomNo: String)
+    + getRoom_id() : int
+    + setRoom_id(room_id: int) : void
+    + getRoom_no() : String
+    + setRoom_no(room_no: String) : void
+    + getBed_number() : int
+    + setBed_number(bed_number: int) : void
+    + isHasTV() : boolean
+    + setHasTV(hasTV: boolean) : void
+    + isHasWIFI() : boolean
+    + setHasWIFI(hasWIFI: boolean) : void
+    + isHasGizer() : boolean
+    + setHasGizer(hasGizer: boolean) : void
+    + isHasPhone() : boolean
+    + setHasPhone(hasPhone: boolean) : void
+    + getRoom_class() : RoomFare
+    + setRoom_class(room_class: RoomFare) : void
+  }
+  class RoomFare {
+    - room_type : String
+    - pricePerDay : int
+    --
+    + getRoom_type() : String
+    + setRoom_type(room_type: String) : void
+    + getPricePerDay() : int
+    + setPricePerDay(pricePerDay: int) : void
+  }
+  class UserInfo {
+    - customer_id : int
+    - name : String
+    - address : String
+    - phone_no : String
+    - type : String
+    --
+    + getCustomer_id() : int
+    + setCustomer_id(customer_id: int) : void
+    + getName() : String
+    + setName(name: String) : void
+    + getAddress() : String
+    + setAddress(address: String) : void
+    + getPhone_no() : String
+    + setPhone_no(phone_no: String) : void
+    + getType() : String
+    + setType(type: String) : void
+  }
+}
+package "I3.DatabaseOperation" {
+  class BookingDb {
+    - conn : Connection
+    - statement : PreparedStatement
+    - result : ResultSet
+    --
+    + BookingDb()
+    + insertBooking(booking: Booking) : void
+    + getBookingInformation() : ResultSet
+    + getABooking(bookingId: int) : ResultSet
+    + bookingsReadyForOrder(roomName: String) : ResultSet
+    + updateCheckOut(bookingId: int, checkOutTime: long) : void
+    + getRoomPrice(bookingId: int) : int
+    + insertOrder(order: Order) : void
+    + getAllPaymentInfo(bookingId: int) : ResultSet
+    + flushAll() : void
+    + flushStatementOnly() : void
+  }
+  class CustomerDb {
+    - conn : Connection
+    - statement : PreparedStatement
+    - result : ResultSet
+    --
+    + CustomerDb()
+    + insertCustomer(user: UserInfo) : void
+    + updateCustomer(user: UserInfo) : void
+    + deleteCustomer(userId: int) : void
+    + getAllCustomer() : ResultSet
+    - flushStatementOnly() : void
+    + flushAll() : void
+  }
+  class DataBaseConnection {
+    - DataBaseConnection()
+    + connectTODB() : Connection
+  }
+  class DatabaseOperation {
+    - statement : PreparedStatement
+    - result : ResultSet
+    --
+    + insertCustomer(user: UserInfo) : void
+    + flushAll() : void
+    + updateCustomer(user: UserInfo) : void
+    + deleteCustomer(userId: int) : void
+    + getAllCustomer() : ResultSet
+    + searchUser(user: String) : ResultSet
+    + searchAnUser(id: int) : ResultSet
+    + getAvailableRooms(check_inTime: long) : ResultSet
+    + getBookingInfo(start_date: long, end_date: long, roomNo: String) : ResultSet
+    + getCustomerId(user: UserInfo) : int
+    - flushStatementOnly() : void
+  }
+  class FoodDb {
+    - statement : PreparedStatement
+    - result : ResultSet
+    --
+    + insertFood(food: Food) : void
+    + getFoods() : ResultSet
+    + updateFood(food: Food) : void
+    + deleteFood(foodId: int) : void
+    + flushAll() : void
+    - flushStatementOnly() : void
+  }
+  class ItemDb {
+    - statement : PreparedStatement
+    - result : ResultSet
+    --
+    + insertItem(item: Item) : void
+    + updateItem(item: Item) : void
+    + getItems() : ResultSet
+    + deleteItem(itemId: int) : void
+    + flushAll() : void
+    - flushStatementOnly() : void
+  }
+  class OrderDb {
+    - statement : PreparedStatement
+    - result : ResultSet
+    --
+    + insertOrder(order: Order) : void
+    + flushAll() : void
+    - flushStatementOnly() : void
+  }
+  class RoomDb {
+    - statement : PreparedStatement
+    - result : ResultSet
+    --
+    + insertRoom(room: Room) : void
+    + getRooms() : ResultSet
+    + getNoOfRooms() : int
+    + getAllRoomNames() : ResultSet
+    + deleteRoom(roomId: int) : void
+    + updateRoom(room: Room) : void
+    + boolToString(value: boolean) : String
+    + insertRoomType(roomType: RoomFare) : void
+    + getRoomType() : ResultSet
+    + updateRoomType(roomType: RoomFare) : void
+    + flushAll() : void
+    - flushStatementOnly() : void
+  }
+}
+package "I3.TableModel" {
+  class BookingTableModel {
+    - columnNames : String[]
+    - date : Date
+    - data : Object[][]
+    --
+    + BookingTableModel(start: long, end: long)
+    + iniColNames() : void
+    + getMonthLimit(x: Date) : int
+    + getRowCount() : int
+    + getColumnCount() : int
+    + getValueAt(row: int, col: int) : Object
+    + getColumnName(col: int) : String
+    + isCellEditable(row: int, column: int) : boolean
+    + fetchDataFromDB(start: long, end: long) : void
+  }
+  class CustomCellRenderer {
+    + getTableCellRendererComponent(table: JTable, value: Object, isSelected: boolean, hasFocus: boolean, row: int, column: int) : Component
+  }
+}
+package "I3.UI" {
+  class BookingDiaryPreview {
+    ~ first : Date
+    ~ last : Date
+    - jButton1 : JButton
+    - jScrollPane1 : JScrollPane
+    - table_model : JTable
+    --
+    + BookingDiaryPreview()
+    - initComponents() : void
+    + actionPerformed(evt: ActionEvent) : void
+    - jButton1ActionPerformed(evt: ActionEvent) : void
+    + main(args[]: String) : void
+    + run() : void
+  }
+  class ControlPanel {
+    ~ booking : Booking
+    ~ existingCustomer : boolean
+    ~ user : UserInfo
+    ~ result : ResultSet
+    - btn_room_up : JButton
+    - btn_saveBooking : JButton
+    - combo_reservationType : JComboBox
+    - combo_users : JComboBox
+    - date_checkIn : JDateChooser
+    - date_checkOut : JDateChooser
+    - jButton1 : JButton
+    - jButton2 : JButton
+    - jButton3 : JButton
+    - jButton4 : JButton
+    - jButton5 : JButton
+    - jButton6 : JButton
+    .. fields truncated in image ..
+    --
+    + ControlPanel()
+    + populateWithBookingData() : void
+    - initComponents() : void
+    + actionPerformed(evt: ActionEvent) : void
+    + getSize() : int
+    + getElementAt(i: int) : Object
+    + propertyChange(evt: PropertyChangeEvent) : void
+    + keyTyped(evt: KeyEvent) : void
+    + actionPerformed(evt: ActionEvent) : void
+    + keyTyped(evt: KeyEvent) : void
+    + actionPerformed(evt: ActionEvent) : void
+    + actionPerformed(evt: ActionEvent) : void
+    + actionPerformed(evt: ActionEvent) : void
+    + actionPerformed(evt: ActionEvent) : void
+    + actionPerformed(evt: ActionEvent) : void
+    + actionPerformed(evt: ActionEvent) : void
+    + actionPerformed(evt: ActionEvent) : void
+    - jButton3ActionPerformed(evt: ActionEvent) : void
+    .. methods truncated in image ..
+  }
+  class CustomerPanel {
+    ~ result : ResultSet
+    - btn_addCustomer : JButton
+    - btn_deleteCustomer : JButton
+    - btn_editCustomer : JButton
+    - btn_reset : JButton
+    - jLabel1 : JLabel
+    - jLabel2 : JLabel
+    - jLabel3 : JLabel
+    - jLabel4 : JLabel
+    - jLabel5 : JLabel
+    - jPanel3 : JPanel
+    - jScrollPane1 : JScrollPane
+    - table_customer : JTable
+    - tf_address : JTextField
+    - tf_id : JTextField
+    - tf_name : JTextField
+    .. fields truncated in image ..
+    --
+    + CustomerPanel()
+    - populateWithCustomerData() : void
+    - initComponents() : void
+    + mouseClicked(evt: MouseEvent) : void
+    + keyTyped(evt: KeyEvent) : void
+    + actionPerformed(evt: ActionEvent) : void
+    + actionPerformed(evt: ActionEvent) : void
+    + actionPerformed(evt: ActionEvent) : void
+    + actionPerformed(evt: ActionEvent) : void
+    - btn_addCustomerActionPerformed(evt: ActionEvent) : void
+    - ObjectCreation() : void
+    - table_customerMouseClicked(evt: MouseEvent) : void
+    - btn_resetActionPerformed(evt: ActionEvent) : void
+    - btn_editCustomerActionPerformed(evt: ActionEvent) : void
+    - btn_deleteCustomerActionPerformed(evt: ActionEvent) : void
+    - tf_phoneKeyTyped(evt: KeyEvent) : void
+    - emptyField() : void
+    - displayToTextField(row: int) : void
+    .. methods truncated in image ..
+  }
+  class FoodPanel {
+    ~ food : Food
+    ~ result : ResultSet
+    - btn_add : JButton
+    - btn_delete : JButton
+    - btn_edit : JButton
+    - jLabel1 : JLabel
+    - jLabel2 : JLabel
+    - jLabel3 : JLabel
+    - jLabel4 : JLabel
+    - jPanel1 : JPanel
+    - jScrollPane1 : JScrollPane
+    - table_food : JTable
+    - tf_food_id : JTextField
+    - tf_food_name : JTextField
+    - tf_food_price : JTextField
+    --
+    + FoodPanel(parent: Frame, modal: boolean)
+    - foodObjectCreation() : void
+    - initComponents() : void
+    + mouseClicked(evt: MouseEvent) : void
+    + actionPerformed(evt: ActionEvent) : void
+    + actionPerformed(evt: ActionEvent) : void
+    + actionPerformed(evt: ActionEvent) : void
+    + keyTyped(evt: KeyEvent) : void
+    - populateFoodTable() : void
+    - btn_addActionPerformed(evt: ActionEvent) : void
+    - btn_editActionPerformed(evt: ActionEvent) : void
+    - btn_deleteActionPerformed(evt: ActionEvent) : void
+    - table_foodMouseClicked(evt: MouseEvent) : void
+    - tf_food_priceKeyTyped(evt: KeyEvent) : void
+    - clearAllFields() : void
+    - displayToTextFields(row: int) : void
+    + main(args[]: String) : void
+    + run() : void
+    .. methods truncated in image ..
+  }
+  class ItemPanel {
+    ~ item : Item
+    ~ result : ResultSet
+    - btn_add : JButton
+    - btn_delete : JButton
+    - btn_edit : JButton
+    - jLabel1 : JLabel
+    - jLabel2 : JLabel
+    - jLabel3 : JLabel
+    - jLabel4 : JLabel
+    - jPanel1 : JPanel
+    - jScrollPane1 : JScrollPane
+    - jScrollPane2 : JScrollPane
+    - table_item : JTable
+    - tf_item_desc : JTextArea
+    - tf_item_id : JTextField
+    - tf_item_name : JTextField
+    .. fields truncated in image ..
+    --
+    + ItemPanel(parent: Frame, modal: boolean)
+    - itemObjectCreation() : void
+    - initComponents() : void
+    + mouseClicked(evt: MouseEvent) : void
+    + actionPerformed(evt: ActionEvent) : void
+    + actionPerformed(evt: ActionEvent) : void
+    + actionPerformed(evt: ActionEvent) : void
+    + keyTyped(evt: KeyEvent) : void
+    - populateFoodTable() : void
+    - btn_addActionPerformed(evt: ActionEvent) : void
+    - btn_editActionPerformed(evt: ActionEvent) : void
+    - btn_deleteActionPerformed(evt: ActionEvent) : void
+    - table_itemMouseClicked(evt: MouseEvent) : void
+    - tf_item_priceKeyTyped(evt: KeyEvent) : void
+    - clearAllFields() : void
+    - displayToTextFields(row: int) : void
+    + main(args[]: String) : void
+    + run() : void
+    .. methods truncated in image ..
+  }
+  class OrderPanel {
+    ~ result : ResultSet
+    - combo_booking : JComboBox
+    - jButton1 : JButton
+    - jLabel1 : JLabel
+    - jLabel2 : JLabel
+    - jLabel3 : JLabel
+    - jLabel4 : JLabel
+    - jPanel1 : JPanel
+    - jScrollPane1 : JScrollPane
+    - jScrollPane2 : JScrollPane
+    - table_food : JTable
+    - table_item : JTable
+    - tf_bookingId : JTextField
+    - tf_foodItem : JTextField
+    - tf_price : JTextField
+    - tf_quantity : JTextField
+    .. fields truncated in image ..
+    --
+    + OrderPanel(parent: Frame, modal: boolean)
+    + searchHelper() : void
+    + keyTyped(evt: KeyEvent) : void
+    + bookingComboFill(result: ResultSet) : void
+    - populateFoodTable() : void
+    - populateItemTable() : void
+    - initComponents() : void
+    + mouseClicked(evt: MouseEvent) : void
+    + mouseClicked(evt: MouseEvent) : void
+    + keyReleased(evt: KeyEvent) : void
+    + keyTyped(evt: KeyEvent) : void
+    + keyTyped(evt: KeyEvent) : void
+    + actionPerformed(evt: ActionEvent) : void
+    - table_foodMouseClicked(evt: MouseEvent) : void
+    - tf_quantityKeyReleased(evt: KeyEvent) : void
+    - jButton1ActionPerformed(evt: ActionEvent) : void
+    - table_itemMouseClicked(evt: MouseEvent) : void
+    - tf_priceKeyTyped(evt: KeyEvent) : void
+    .. methods truncated in image ..
+  }
+  class PaymentPanel {
+    ~ result : ResultSet
+    - btn_checkOut : JButton
+    - combo_booking : JComboBox
+    - jButton1 : JButton
+    - jButton2 : JButton
+    - jLabel1 : JLabel
+    - jScrollPane1 : JScrollPane
+    - table_payment : JTable
+    - tf_total : JTextField
+    --
+    + PaymentPanel(parent: Frame, modal: boolean)
+    - initComponents() : void
+    + actionPerformed(evt: ActionEvent) : void
+    + actionPerformed(evt: ActionEvent) : void
+    + propertyChange(evt: PropertyChangeEvent) : void
+    + actionPerformed(evt: ActionEvent) : void
+    - btn_checkOutActionPerformed(evt: ActionEvent) : void
+    - jButton1ActionPerformed(evt: ActionEvent) : void
+    - jButton2ActionPerformed(evt: ActionEvent) : void
+    - table_paymentPropertyChange(evt: PropertyChangeEvent) : void
+    - updateTotalCheckBox() : void
+    - populatePaymentTable(result: ResultSet) : void
+    + bookingComboFill(result: ResultSet) : void
+    + searchHelper() : void
+    + keyTyped(evt: KeyEvent) : void
+    + main(args[]: String) : void
+    + run() : void
+    + windowClosing(e: WindowEvent) : void
+  }
+  class RoomPanel {
+    ~ result : ResultSet
+    - btn_add : JButton
+    - btn_addRoomType : JButton
+    - btn_delete : JButton
+    - btn_deleteRoomType : JButton
+    - btn_edit : JButton
+    - btn_editRoomType : JButton
+    - check_gizer : JCheckBox
+    - check_phone : JCheckBox
+    - check_tv : JCheckBox
+    - check_wifi : JCheckBox
+    - combo_roomType : JComboBox
+    - jButton1 : JButton
+    - jLabel1 : JLabel
+    - jLabel2 : JLabel
+    - jLabel3 : JLabel
+    .. fields truncated in image ..
+    --
+    + RoomPanel(parent: Frame, modal: boolean)
+    - initComponents() : void
+    + mouseClicked(evt: MouseEvent) : void
+    + actionPerformed(evt: ActionEvent) : void
+    + actionPerformed(evt: ActionEvent) : void
+    + actionPerformed(evt: ActionEvent) : void
+    + actionPerformed(evt: ActionEvent) : void
+    + actionPerformed(evt: ActionEvent) : void
+    + actionPerformed(evt: ActionEvent) : void
+    + actionPerformed(evt: ActionEvent) : void
+    + keyTyped(evt: KeyEvent) : void
+    + actionPerformed(evt: ActionEvent) : void
+    + mouseClicked(evt: MouseEvent) : void
+    - btn_addRoomTypeActionPerformed(evt: ActionEvent) : void
+    - populateCombo() : void
+    - populateRoomTypeTable() : void
+    - populateRoomTable() : void
+    - tf_priceKeyTyped(evt: KeyEvent) : void
+    .. methods truncated in image ..
+  }
+}
+Booking ..> UserInfo
+ExtraOrders ..> Item
+Payment ..> Booking
+Room ..> RoomFare
+BookingDb ..> Booking
+BookingDb ..> Order
+CustomerDb ..> UserInfo
+DatabaseOperation ..> Food
+DatabaseOperation ..> Item
+DatabaseOperation ..> Room
+DatabaseOperation ..> RoomFare
+DatabaseOperation ..> UserInfo
+FoodDb ..> Food
+ItemDb ..> Item
+OrderDb ..> Order
+RoomDb ..> Room
+RoomDb ..> RoomFare
+BookingTableModel ..> BookingDb
+BookingTableModel ..> DatabaseOperation
+BookingTableModel ..> RoomDb
+BookingDiaryPreview ..> BookingTableModel
+BookingDiaryPreview ..> CustomCellRenderer
+ControlPanel ..> Booking
+ControlPanel ..> BookingDb
+ControlPanel ..> CustomCellRenderer
+ControlPanel ..> CustomerDb
+ControlPanel ..> DatabaseOperation
+ControlPanel ..> UserInfo
+CustomerPanel ..> CustomerDb
+CustomerPanel ..> DatabaseOperation
+CustomerPanel ..> UserInfo
+FoodPanel ..> DatabaseOperation
+FoodPanel ..> Food
+FoodPanel ..> FoodDb
+ItemPanel ..> DatabaseOperation
+ItemPanel ..> Food
+ItemPanel ..> FoodDb
+ItemPanel ..> Item
+ItemPanel ..> ItemDb
+OrderPanel ..> BookingDb
+OrderPanel ..> DatabaseOperation
+OrderPanel ..> FoodDb
+OrderPanel ..> ItemDb
+OrderPanel ..> Order
+OrderPanel ..> OrderDb
+PaymentPanel ..> BookingDb
+PaymentPanel ..> Order
+PaymentPanel ..> OrderDb
+RoomPanel ..> DatabaseOperation
+RoomPanel ..> Room
+RoomPanel ..> RoomDb
+RoomPanel ..> RoomFare
+@enduml
